@@ -16,9 +16,12 @@ module Colorize
     #   puts "This is blue text on red".blue.on_red.blink
     #   puts "This is uncolorized".blue.on_red.uncolorize
     #
+    # @param params [Symbol, Hash]
     def colorize(params)
       return self if self.class.disable_colorization
       require_windows_libs
+      # @param str [String]
+      # @param match [Array]
       scan_for_colors.inject(self.class.new) do |str, match|
         colors_from_params(match, params)
         defaults_colors(match)
@@ -38,6 +41,7 @@ module Colorize
     #
     # Return true if string is colorized
     #
+    # @return [Boolean]
     def colorized?
       scan_for_colors.inject([]) do |colors, match|
         colors << match.tap(&:pop)
@@ -49,6 +53,8 @@ module Colorize
     #
     # Set default colors
     #
+    # @param match [Array]
+    # @return [void]
     def defaults_colors(match)
       match[0] ||= mode(:default)
       match[1] ||= color(:default)
@@ -58,6 +64,9 @@ module Colorize
     #
     # Set color from params
     #
+    # @param match [Array]
+    # @param params [Symbol, Hash]
+    # @return [void]
     def colors_from_params(match, params)
       case params
       when Hash then colors_from_hash(match, params)
@@ -68,6 +77,9 @@ module Colorize
     #
     # Set colors from params hash
     #
+    # @param match [Array]
+    # @param hash [Hash]
+    # @return [void]
     def colors_from_hash(match, hash)
       match[0] = mode(hash[:mode])                   if mode(hash[:mode])
       match[1] = color(hash[:color])                 if color(hash[:color])
@@ -77,6 +89,9 @@ module Colorize
     #
     # Set color from params symbol
     #
+    # @param match [Array<String>]
+    # @param symbol [Symbol]
+    # @return [void]
     def color_from_symbol(match, symbol)
       match[1] = color(symbol) if color(symbol)
     end
@@ -84,6 +99,8 @@ module Colorize
     #
     # Color for foreground (offset 30)
     #
+    # @param color [Symbol]
+    # @return [Integer, nil]
     def color(color)
       self.class.color_codes[color] + 30 if self.class.color_codes[color]
     end
@@ -91,6 +108,8 @@ module Colorize
     #
     # Color for background (offset 40)
     #
+    # @param color [Symbol]
+    # @return [Integer, nil]
     def background_color(color)
       self.class.color_codes[color] + 40 if self.class.color_codes[color]
     end
@@ -98,6 +117,8 @@ module Colorize
     #
     # Mode
     #
+    # @param mode [Symbol]
+    # @return [Integer]
     def mode(mode)
       self.class.mode_codes[mode]
     end
@@ -105,6 +126,7 @@ module Colorize
     #
     # Scan for colorized string
     #
+    # @return [Array<Array>] (`Array<Array<String, nil>>`)
     def scan_for_colors
       scan(/\033\[([0-9;]+)m(.+?)\033\[0m|([^\033]+)/m).map do |match|
         split_colors(match)
@@ -123,6 +145,7 @@ module Colorize
     #
     # Require windows libs
     #
+    # @return [void]
     def require_windows_libs
       require 'Win32/Console/ANSI' if RUBY_VERSION < '2.0.0' && RUBY_PLATFORM =~ /win32/
     rescue LoadError
