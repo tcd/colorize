@@ -13,6 +13,8 @@ class ColorizedString < String
   #
   # Shortcut to create ColorizedString with ColorizedString['test'].
   #
+  # @param string [String]
+  # @return [ColorizedString]
   def self.[](string)
     ColorizedString.new(string)
   end
