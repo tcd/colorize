@@ -17,6 +17,7 @@ module Colorize
     #   puts "This is uncolorized".blue.on_red.uncolorize
     #
     # @param params [Symbol, Hash]
+    # @return [self]
     def colorize(params)
       return self if self.class.disable_colorization
       require_windows_libs
@@ -32,6 +33,7 @@ module Colorize
     #
     # Return uncolorized string
     #
+    # @return [self]
     def uncolorize
       scan_for_colors.inject(self.class.new) do |str, match|
         str << match[3]
@@ -133,6 +135,18 @@ module Colorize
       end
     end
 
+    #
+    # Split color values from string content
+    #
+    # |   index    |      value       |
+    # | :--------: | :--------------: |
+    # | `match[0]` |       mode       |
+    # | `match[1]` |      color       |
+    # | `match[2]` | background_color |
+    # | `match[3]` |  string content  |
+    #
+    # @param match [Array<String, nil>] 3 element array
+    # @return [Array<String, nil>] 4 element array
     def split_colors(match)
       colors = (match[0] || '').split(';')
       array = Array.new(3)
