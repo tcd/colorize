@@ -3,6 +3,8 @@ module Colorize
     #
     # Property to disable colorization
     #
+    # @param value [Boolean]
+    # @return [Boolean]
     def disable_colorization(value = nil)
       if value.nil?
         if defined?(@disable_colorization)
@@ -18,6 +20,8 @@ module Colorize
     #
     # Setter for disable colorization
     #
+    # @param value [Boolean]
+    # @return [Boolean]
     def disable_colorization=(value)
       @disable_colorization = (value || false)
     end
@@ -25,6 +29,7 @@ module Colorize
     #
     # Return array of available colors used by colorize
     #
+    # @return [Array<Symbol>]
     def colors
       color_codes.keys
     end
@@ -32,6 +37,7 @@ module Colorize
     #
     # Return array of available modes used by colorize
     #
+    # @return [Array<Symbol>]
     def modes
       mode_codes.keys
     end
@@ -39,6 +45,7 @@ module Colorize
     #
     # Display color samples
     #
+    # @return [void]
     def color_samples
       colors.permutation(2).each do |background, color|
         sample_text = "#{color.inspect.rjust(15)} on #{background.inspect.ljust(15)}"
@@ -49,6 +56,7 @@ module Colorize
     #
     # Method removed, raise NoMethodError
     #
+    # @return [void]
     def color_matrix(_ = '')
       fail NoMethodError, '#color_matrix method was removed, try #color_samples instead'
     end
@@ -58,6 +66,7 @@ module Colorize
     #
     # Color codes hash
     #
+    # @return [Hash{Symbol => Integer}]
     def color_codes
       {
         :black   => 0, :light_black    => 60,
@@ -75,6 +84,7 @@ module Colorize
     #
     # Mode codes hash
     #
+    # @return [Hash{Symbol => Integer}]
     def mode_codes
       {
         :default   => 0, # Turn off all attributes
@@ -90,6 +100,7 @@ module Colorize
     #
     # Generate color and on_color methods
     #
+    # @return [void]
     def color_methods
       colors.each do |key|
         next if key == :default
@@ -107,6 +118,7 @@ module Colorize
     #
     # Generate modes methods
     #
+    # @return [void]
     def modes_methods
       modes.each do |key|
         next if key == :default
